@@ -12,10 +12,11 @@ class Translate
 
   attr_reader :texts, :from, :steps, :languages
 
-  def initialize(*texts, from: 'en', steps: 1)
+  def initialize(*texts, from: 'en', steps: 1, use_languages: nil)
     @texts = block_given? ? yield : texts
     @from = from
-    @steps = steps
+    @use_languages = use_languages
+    @steps = use_languages&.size || steps
     @languages = {}
   end
 
@@ -23,7 +24,7 @@ class Translate
     @languages = {}
 
     @steps.times do |step|
-      language = random_language(step)
+      language = pick_language(step)
       print "#{language} "
 
       translate(language)
@@ -45,8 +46,17 @@ class Translate
 
   private
 
+  def pick_language(step)
+    return random_language(step) if @use_languages.nil?
+
+    add_language(@use_languages.shift, step)
+  end
+
   def random_language(step)
-    lang = LANGUAGES.sample
+    add_language(LANGUAGES.sample, step)
+  end
+
+  def add_language(lang, step)
     @languages[step] = lang
     lang['code']
   end
