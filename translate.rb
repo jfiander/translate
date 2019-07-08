@@ -14,6 +14,7 @@ class Translate
 
   def initialize(*texts, from: 'en', steps: 1, use_languages: nil)
     @texts = block_given? ? yield : texts
+    @intermediate = @texts
     @from = from
     @use_languages = use_languages
     @steps = use_languages&.size || steps
@@ -27,13 +28,31 @@ class Translate
       language = pick_language(step)
       print "#{language} "
 
-      translate(language)
+      @intermediate = translate(language)
     end
 
-    translate(@from)
+    @texts = translate(@from)
     print("\n")
 
     @texts
+  end
+
+  def check(language = nil)
+    language ||= LANGUAGES.sample
+    puts language['code']
+    @intermediate = translate(language['code'])
+    @result = translate(@from)
+    puts @result
+  end
+
+  def step(language = nil)
+    language ||= LANGUAGES.sample
+    puts language['code']
+    @intermediate = translate(language['code'])
+  end
+
+  def finish
+    @texts = translate(@from)
   end
 
   def text
@@ -62,6 +81,6 @@ class Translate
   end
 
   def translate(to)
-    @texts = @texts.map { |text| TRANSLATOR.translate(text, to: to).text }
+    @intermediate.map { |text| TRANSLATOR.translate(text, to: to).text }
   end
 end
