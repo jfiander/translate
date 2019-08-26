@@ -14,6 +14,7 @@ class Translate
 
   def initialize(*texts, from: 'en', steps: 1, use_languages: nil)
     @texts = block_given? ? yield : texts
+    @original_texts = @texts
     @intermediate = @texts
     @from = from
     @use_languages = use_languages
@@ -59,8 +60,13 @@ class Translate
     @texts.join("\n")
   end
 
-  def language_names
-    @languages.values.map { |h| h['name'] }
+  def text_pairs
+    @original_texts.zip(@texts)
+  end
+
+  def languages_used(arrows = false)
+    names = @languages.values.map { |h| h['name'] }
+    arrows ? names.join(' -> ') : names
   end
 
   private
