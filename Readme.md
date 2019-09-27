@@ -29,7 +29,8 @@ end
 
 t.run # Calls the API
 t.text # The resultant text.
-t.language_names # The names of the languages used.
+t.text_pairs # The resultant text pairs.
+t.languages_used(true) # The names of the languages used.
 ```
 
 You can also specify which languages to use:
