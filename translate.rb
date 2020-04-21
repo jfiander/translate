@@ -12,9 +12,8 @@ class Translate
 
   attr_reader :texts, :from, :steps, :languages
 
-  # First, define a method containing the array of lines to translate.
-  def self.malinda(method)
-    t = new(steps: 20) { send(method) }
+  def self.malinda(lines)
+    t = new(steps: 20) { lines }
     t.run
     puts("\n", t.languages_used(true), "\n", t.texts.map { |line| "#{line}\n" })
     t
