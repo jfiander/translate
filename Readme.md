@@ -16,6 +16,16 @@ path to the downloaded JSON configuration file.
 
 ## Usage
 
+For Community Translate posts from Malinda:
+
+```ruby
+load 'translate.rb'
+
+Translate.malinda(lines)
+```
+
+For general use:
+
 ```ruby
 load 'translate.rb'
 
