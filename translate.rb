@@ -12,6 +12,14 @@ class Translate
 
   attr_reader :texts, :from, :steps, :languages
 
+  # First, define a method containing the array of lines to translate.
+  def self.malinda(method)
+    t = new(steps: 20) { send(method) }
+    t.run
+    puts("\n", t.languages_used(true), "\n", t.texts.map { |line| "#{line}\n" })
+    t
+  end
+
   def initialize(*texts, from: 'en', steps: 1, use_languages: nil)
     @texts = block_given? ? yield : texts
     @original_texts = @texts
@@ -87,6 +95,8 @@ class Translate
   end
 
   def translate(to)
-    @intermediate.map { |text| TRANSLATOR.translate(text, to: to).text }
+    @intermediate.map do |text|
+      TRANSLATOR.translate(text, to: to).text.gsub('&#39;', "'")
+    end
   end
 end
