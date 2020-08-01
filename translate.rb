@@ -29,7 +29,7 @@ class Translate
     @languages = {}
   end
 
-  def run
+  def run(out: nil)
     @languages = {}
 
     @steps.times do |step|
@@ -42,7 +42,19 @@ class Translate
     @texts = translate(@from)
     print("\n")
 
-    @texts
+    out ? save(out) : @texts
+  end
+
+  def save(filename = 'translated')
+    out_path = "tmp/#{filename}.txt"
+    File.open(out_path, 'w+') do |f|
+    f.puts(languages_used(true))
+    f.puts("\n**********\n")
+    f.puts(text)
+    f.close
+    end
+
+    out_path
   end
 
   def check(language = nil)
